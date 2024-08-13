@@ -36,21 +36,23 @@ class DatabaseHelper:
     """
     Асинхронно освобождает ресурсы базы данных.
     """
+
     async def dispose(self) -> None:
         await self.engine.dispose()
 
     """
     Асинхронно предоставляет сессию из фабрики сессий.
     """
+
     async def session_getter(self) -> AsyncGenerator[AsyncSession, None]:
         async with self.session_factory() as session:
             yield session
 
 
 db_helper = DatabaseHelper(
-    url=str(settings.db.url),
-    echo=settings.db.echo,
-    echo_pool=settings.db.echo_pool,
-    pool_size=settings.db.pool_size,
-    max_overflow=settings.db.max_overflow,
+    url=str(settings.DATABASE_URL),
+    # echo=settings.db.echo,
+    # echo_pool=settings.db.echo_pool,
+    # pool_size=settings.db.pool_size,
+    # max_overflow=settings.db.max_overflow,
 )
