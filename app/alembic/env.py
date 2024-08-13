@@ -1,6 +1,8 @@
 import asyncio
 from logging.config import fileConfig
 
+import sys
+from os.path import dirname, abspath
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
@@ -10,9 +12,16 @@ from alembic import context
 from core.config import settings
 from core.models import Base
 
+sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+# Добавить эту строку в файле конфигурации
+config.set_main_option(
+    "sqlalchemy.url", f"{str(settings.DATABASE_URL)}?async_fallback=True"
+)
+
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -30,8 +39,6 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 # _________________________________________________________________________________
-# Добавить эту строку в файле конфигурации
-config.set_main_option("sqlalchemy.url", str(settings.db.url))
 
 
 # __________________________
